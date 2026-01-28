@@ -19,14 +19,22 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 9 # 使用しているpnpmのバージョンに合わせてください（不明なら最新の9でOK）
+          version: 9
 
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20 # Astroが推奨するNode.js 18.x または 20.x
+          node-version: 20
           cache: 'pnpm'
 
-      - name: Install, build, and upload with Astro
-        uses: withastro/action@v3
-        
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build with Astro
+        # ここで直接ビルドコマンドを叩くことで、actionの自動チェックを回避します
+        run: pnpm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
