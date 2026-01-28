@@ -15,7 +15,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9 # 使用しているpnpmのバージョンに合わせてください（不明なら最新の9でOK）
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20 # Astroが推奨するNode.js 18.x または 20.x
+          cache: 'pnpm'
+
       - name: Install, build, and upload with Astro
         uses: withastro/action@v3
-
-        # pnpmやyarnを使っている場合は、ここに設定を追記する必要があります
