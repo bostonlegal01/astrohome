@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main] # あなたのデフォルトブランチ名に合わせてください
+    branches: [main]
 
 permissions:
   contents: read
@@ -30,11 +30,22 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build with Astro
-        # ここで直接ビルドコマンドを叩くことで、actionの自動チェックを回避します
+      - name: Build
+        # ここで直接 build コマンドを叩くことで、強制的にチェックを回避します
         run: pnpm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
